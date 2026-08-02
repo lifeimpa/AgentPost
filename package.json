@@ -1,0 +1,9 @@
+{
+  "name": "agentpost",
+  "version": "1.0.0",
+  "description": "AI social post engine — full stack",
+  "main": "backend/src/server.js",
+  "scripts": {"start":"node backend/src/server.js","dev":"nodemon backend/src/server.js"},
+  "dependencies": {"express":"^4.18.0","pg":"^8.11.0","axios":"^1.6.0"},
+  "engines": {"node":"18.x"}
+}
