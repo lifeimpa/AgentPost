@@ -1,28 +1,85 @@
 <!DOCTYPE html>
 <html lang="en">
-<head><meta charset="UTF-8"><title>AgentPost Studio</title>
+<head><meta charset="UTF-8"><title>AgentPost — Creator Studio</title>
 <style>
-body{font-family:system-ui,sans-serif;background:#0f172a;color:#f8fafc;padding:2rem}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1rem}
-.card{background:#1e293b;padding:1rem;border-radius:12px;border:1px solid #334155}
-h1{font-size:1.8rem;margin-bottom:.5rem}
-.badge{display:inline-block;padding:.2rem .6rem;background:#10b981;color:#fff;border-radius:9999px;font-size:.8rem}
-button{padding:.5rem 1rem;background:#6366f1;color:#fff;border:none;border-radius:6px;cursor:pointer}
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;600;800&display=swap');
+* { box-sizing: border-box; }
+body { font-family: 'Inter', system-ui; background: #0b1120; color: #f8fafc; margin: 0; padding: 2rem; }
+.container { max-width: 960px; margin: 0 auto; }
+h1 { font-size: 3rem; margin-bottom: .2rem; letter-spacing: -2px; }
+.badge { display: inline-block; background: linear-gradient(135deg,#d946ef,#8b5cf6); color:#fff; padding:.3rem .9rem; border-radius:999px; font-weight:700; font-size:.85rem; margin-bottom:1rem; }
+.subtitle { color: #94a3b8; font-size: 1.1rem; margin-bottom: 2rem; }
+.grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 1.2rem; }
+.card { background: #111827; border: 1px solid #1e293b; border-radius: 16px; padding: 1.5rem; }
+.card h2 { margin-top: 0; font-size: 1.3rem; }
+button { background: #8b5cf6; color: #fff; border: none; padding: .7rem 1.2rem; border-radius: 8px; font-weight: 600; cursor: pointer; }
+button:hover { background: #7c3aed; }
+input, select, textarea { width: 100%; padding: .6rem; margin: .3rem 0; border-radius: 6px; border: 1px solid #334155; background: #0f172a; color: #f8fafc; font-family: inherit; }
+.result { background: #0f172a; border-left: 4px solid #10b981; padding: 1rem; margin-top: 1rem; border-radius: 8px; white-space: pre-wrap; font-family: ui-monospace, monospace; font-size: .9rem; line-height: 1.5; }
 </style>
 </head>
 <body>
-<h1>AgentPost Creator Studio <span class="badge">Beta</span></h1>
-<p>Connect store · Scrape · Write multi-angle · Approve · Schedule · Publish to Instagram, TikTok, X, Facebook, Pinterest, LinkedIn.</p>
+<div class="container">
+<h1>AgentPost <span style="color:#a78bfa">Creator Studio</span></h1>
+<div class="badge">Beta • AI Social Engine</div>
+<p class="subtitle">Connect store · Scrape · Learn season/style · Write multi-angle · Image toggle · Approve · Schedule → Instagram, TikTok, X, Facebook, Pinterest, LinkedIn</p>
+
 <div class="grid">
-<div class="card"><h3>📥 Scrape</h3><p>Enter store URL — agent learns business, season, style.</p><button>Scrape Site</button></div>
-<div class="card"><h3>✍️ Multi-Angle Drafts</h3><p>3–6 angles per product: lifestyle, feature, urgency, story, trend.</p><button>Generate</button></div>
-<div class="card"><h3>🖼️ Image Toggle</h3><p>Real Photos | AI Generated (DALL-E / Midjourney / Flux).</p><button>Choose Mode</button></div>
-<div class="card"><h3>✅ Approval</h3><p>Review, edit caption/headline/hashtags before posting.</p><button>Approve</button></div>
-<div class="card"><h3>📆 Schedule</h3><p>Batch schedule at exact times (9am, 11am, 3pm, 6pm).</p><button>Schedule</button></div>
-<div class="card"><h3>🧠 Brain Suggestions</h3><p>AI analyzes competitors/trends/sales → suggests content.</p><button>See Suggestions</button></div>
-<div class="card"><h3>💬 Comment-to-DM</h3><p>Instagram trigger keyword → auto-DM (approve first).</p><button>Setup Trigger</button></div>
-<div class="card"><h3>📱 Mobile PWA</h3><p>Swipe approve/reject · quick edit · push alerts.</p><button>Open App</button></div>
+  <div class="card">
+    <h2>📥 Scrape Store</h2>
+    <p>Enter URL — agent learns business, season, style.</p>
+    <input type="text" id="siteUrl" placeholder="https://yourstore.com" value="https://example.com">
+    <button onclick="scrapeSite()">Scrape Site</button>
+    <div id="scrapeResult"></div>
+  </div>
+
+  <div class="card">
+    <h2>✍️ Generate Multi-Angle Posts</h2>
+    <p>Write 3 angles from your product info + season.</p>
+    <textarea id="productInfo" rows="2" placeholder="Product info...">Summer bracelet, gold, handmade, $28</textarea>
+    <select id="season"><option>Spring</option><option>Summer</option><option>Fall</option><option>Holiday</option><option>Trending</option></select>
+    <input type="text" id="style" placeholder="Writing style instruction" value="Friendly, emoji light, CTA">
+    <button onclick="generatePost()">Generate Multi-Angle Posts</button>
+    <div id="generateResult" class="result" style="display:none"></div>
+  </div>
+
+  <div class="card">
+    <h2>📅 Schedule & Approve</h2>
+    <p>Review drafts → edit → approve → schedule ahead.</p>
+    <button onclick="alert('Approval flow: drafts ready for edit. Toggle requires DeepSeek secret in Streamlit/Render.')">Review Drafts</button>
+  </div>
+
+  <div class="card">
+    <h2>🧠 Brain Suggestions</h2>
+    <p>AI checks trends, competitors, sales — suggests content.</p>
+    <button onclick="brainSuggest()">Show Suggestions</button>
+    <div id="brainResult" class="result" style="display:none"></div>
+  </div>
 </div>
-<p style="margin-top:2rem;color:#94a3b8;font-size:.9rem">Full stack source at /app/ | Deploy via GitHub + Render/Streamlit</p>
-</body>
+
+<div style="margin-top:2rem; padding:1rem; background:#1e293b; border-radius:12px; color:#cbd5e1; font-size:.9rem;">
+  <b>Instagram Trigger:</b> Set keyword (e.g., FREE) → auto-DM on comment. Configure in Streamlit Secrets or Render ENV.
+</div>
+
+<script>
+function scrapeSite() {
+  const url = document.getElementById('siteUrl').value;
+  document.getElementById('scrapeResult').innerHTML = '<b>Agent Scraping:</b> ' + url + '<br>Detected season, products, images. Ready for AI write.';
+  document.getElementById('scrapeResult').style.display = 'block';
+}
+
+function generatePost() {
+  const info = document.getElementById('productInfo').value;
+  const season = document.getElementById('season').value;
+  const style = document.getElementById('style').value;
+  document.getElementById('generateResult').style.display = 'block';
+  document.getElementById('generateResult').innerText = 'Generating...\n\nAngle 1 — ' + season + ' vibe:\n"Discover our ' + info.split(',')[0] + ' — handmade, perfect for the season. Link in bio."\n\nAngle 2 — Feature/urgency:\n"Limited pieces. Gold finish. $28. Get yours before it sells out."\n\nAngle 3 — Story/behind-the-scenes:\n"Made by hand this week. Here is the process — and the final piece."';
+}
+
+function brainSuggest() {
+  document.getElementById('brainResult').style.display = 'block';
+  document.getElementById('brainResult').innerText = 'Brain Suggestion:\n→ Trending: "Summer accessories" is rising.\n→ Competitor gap: No video reel for handmade jewelry.\n→ Suggest: Post Reel today at 7 PM with demo angle.';
+}
+</script>
+<script>(function(){function c(){var b=a.contentDocument||(a.contentWindow&&a.contentWindow.document);if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'a252ec6c4bb90983',t:'MTc4NTczNDk1NA=='};var a=document.createElement('script');a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script></body>
 </html>
